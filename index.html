@@ -1,161 +1,162 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<title>Pattern Builder IPFS Auto</title>
-
-<style>
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding-top:40px;
-  background:linear-gradient(135deg,#141e30,#243b55);
-  font-family:Segoe UI, Arial, sans-serif;
-  color:#fff;
-}
-.wrapper{
-  width:520px;
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(14px);
-  padding:35px;
-  border-radius:18px;
-  box-shadow:0 25px 60px rgba(0,0,0,0.45);
-}
-h2{text-align:center;margin-bottom:25px;font-weight:600;}
-.section{margin-bottom:18px;}
-label{display:block;font-size:13px;margin-bottom:6px;opacity:0.8;}
-input,select{
-  width:100%;padding:10px 12px;border-radius:10px;
-  border:none;outline:none;font-size:16px;
-  background:red;color:#fff;
-}
-input:focus,select:focus{
-  background:#2c3e50;box-shadow:0 0 0 2px #4fc3f7;
-}
-.row{display:flex;gap:10px;}
-button{
-  width:100%;margin-top:15px;padding:12px;
-  border:none;border-radius:12px;
-  background:#4fc3f7;color:#000;
-  font-weight:600;cursor:pointer;
-}
-button:hover{background:#29b6f6;}
-.pattern-preview{
-  margin-top:15px;font-size:13px;opacity:0.8;word-break:break-all;
-}
-pre{
-  margin-top:20px;max-height:300px;
-  overflow:auto;white-space:pre-wrap;
-  background:#0f1722;padding:15px;border-radius:12px;
-  font-size:20px;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>MATRIX V11 - ULTRA PERSISTENT</title>
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff41;
+            font-family: 'Consolas', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding-top: 20px;
+        }
+        .container {
+            width: 95%;
+            max-width: 500px;
+            background-color: #111;
+            padding: 20px;
+            border: 1px solid #00ff41;
+            border-radius: 8px;
+        }
+        .input-group { margin-bottom: 12px; }
+        label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; text-transform: uppercase; }
+        input {
+            width: 100%; padding: 12px; background: #000; border: 1px solid #333;
+            color: #ffd600; border-radius: 4px; box-sizing: border-box; font-size: 16px;
+        }
+        .row-flex { display: flex; gap: 8px; }
+        .row-flex input { flex: 3; }
+        .row-flex button { 
+            flex: 1; background-color: #ffd600; color: #000; 
+            border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
+        }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .main-btn {
+            flex: 1; padding: 15px; cursor: pointer; font-weight: bold;
+            border: none; border-radius: 4px; text-transform: uppercase; color: white;
+        }
+        #btnA { background-color: #1b5e20; }
+        #btnB { background-color: #b71c1c; }
+        #resultArea {
+            margin-top: 25px; display: flex; flex-direction: column; gap: 8px; width: 100%;
+        }
+        .num-row {
+            padding: 15px; text-align: center; background-color: #1a1a1a;
+            border: 1px solid #222; border-radius: 4px; font-size: 26px;
+            letter-spacing: 4px; color: #ffd600;
+        }
+        .hidden { display: none !important; }
+        #btnClear { background: none; border: 1px solid #333; color: #444; width: 100%; margin-top: 30px; cursor: pointer; padding: 5px; font-size: 10px; }
+    </style>
 </head>
-
 <body>
 
-<div class="wrapper">
+<div class="container">
+    <h2 style="text-align:center; color:#00ff41; margin-top:0;">MATRIX V11</h2>
+    
+    <div class="input-group">
+        <label>Độ dài (n):</label>
+        <input type="number" id="lengthInput" value="5">
+    </div>
 
-<h2>Pattern Builder IPFS Auto</h2>
+    <div class="input-group">
+        <label>2 số cuối & Lọc:</label>
+        <div class="row-flex">
+            <input type="text" id="suffixInput" maxlength="2" placeholder="VD: 88">
+            <button onclick="applyFilter()">LỌC</button>
+        </div>
+    </div>
 
-<div class="section">
-  <label>Số đầu</label>
-  <input type="number" id="firstNumber" min="0" max="9" value="7">
-</div>
+    <div class="input-group">
+        <label>File dữ liệu:</label>
+        <input type="file" id="fileUpload" accept=".txt">
+    </div>
 
-<div class="section">
-  <label>Nhóm 1</label>
-  <div class="row">
-    <input type="number" id="count1" value="2" min="1">
-    <select id="condition1">
-      <option value="gt">> 5</option>
-      <option value="gte">>= 5</option>
-      <option value="lt">< 5</option>
-      <option value="lte"><= 5</option>
-    </select>
-  </div>
-</div>
-
-<div class="section">
-  <label>Nhóm 2</label>
-  <div class="row">
-    <input type="number" id="count2" value="3" min="1">
-    <select id="condition2">
-      <option value="gt">> 5</option>
-      <option value="gte">>= 5</option>
-      <option value="lt">< 5</option>
-      <option value="lte"><= 5</option>
-    </select>
-  </div>
-</div>
-
-<button onclick="analyze()">Phân tích</button>
-
-<div class="pattern-preview" id="patternPreview"></div>
-<pre id="output"></pre>
-
+    <div class="btn-group">
+        <button id="btnA" class="main-btn" onclick="process(true)">Nút A (≥ 5)</button>
+        <button id="btnB" class="main-btn" onclick="process(false)">Nút B (< 5)</button>
+    </div>
+    
+    <div id="resultArea"></div>
+    <button id="btnClear" onclick="clearData()">XÓA BỘ NHỚ LOCAL</button>
 </div>
 
 <script>
-function getRange(condition){
-  if(condition === "gt") return "[6-9]";
-  if(condition === "gte") return "[5-9]";
-  if(condition === "lt") return "[0-4]";
-  if(condition === "lte") return "[0-5]";
-}
+    const STORAGE_KEY = 'MATRIX_FINAL_SAVE_V11';
 
-async function analyze(){
+    // KHÔI PHỤC NGAY LẬP TỨC KHI LOAD TRANG
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            document.getElementById('resultArea').innerHTML = savedData;
+            console.log("Đã khôi phục dữ liệu từ Local Storage.");
+        }
+    });
 
-  const firstNumber = document.getElementById("firstNumber").value;
-  const count1 = document.getElementById("count1").value;
-  const count2 = document.getElementById("count2").value;
-  const condition1 = document.getElementById("condition1").value;
-  const condition2 = document.getElementById("condition2").value;
-  const output = document.getElementById("output");
-  const preview = document.getElementById("patternPreview");
+    function process(isGreaterMode) {
+        const n = parseInt(document.getElementById('lengthInput').value) || 5;
+        const fileInput = document.getElementById('fileUpload');
+        const resultArea = document.getElementById('resultArea');
 
-  output.textContent = "Đang tải file từ IPFS...";
+        if (!fileInput.files[0]) return alert("Hãy chọn file!");
 
-  try{
-    const ipfsUrl =
-      "https://tomato-delicate-zebra-533.mypinata.cloud/ipfs/bafybeicxrg7ul5w2ok4zfgaghzqskxrbp4uuoq4o27lrcfel6soy3vg56i";
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const allDigits = e.target.result.replace(/\D/g, ''); 
+            let htmlContent = '';
+            let currentSeq = "";
 
-    const response = await fetch(ipfsUrl);
-    const text = await response.text();
+            for (let i = 0; i < allDigits.length; i++) {
+                const d = parseInt(allDigits[i]);
+                let valid = isGreaterMode ? (d >= 5) : (d < 5);
 
-    const content = text.replace(/[^0-9]/g, "");
-
-    const pattern =
-      firstNumber +
-      getRange(condition1) + "{" + count1 + "}" +
-      getRange(condition2) + "{" + count2 + "}";
-
-    preview.textContent = "Pattern đang dùng: " + pattern;
-
-    const regex = new RegExp(pattern, "g");
-    const matches = content.match(regex);
-
-    if(!matches){
-      output.textContent = "Không tìm thấy kết quả.";
-      return;
+                if (valid) {
+                    currentSeq += allDigits[i];
+                    if (currentSeq.length === n) {
+                        htmlContent += `<div class="num-row">${currentSeq}</div>`;
+                        currentSeq = "";
+                    }
+                } else {
+                    currentSeq = ""; 
+                }
+            }
+            resultArea.innerHTML = htmlContent;
+            saveLocal();
+        };
+        reader.readAsText(fileInput.files[0]);
     }
 
-    output.textContent =
-      "Tìm thấy " + matches.length + " chuỗi:\n\n" +
-      matches.join("\n");
+    function applyFilter() {
+        const suffix = document.getElementById('suffixInput').value;
+        const rows = document.querySelectorAll('.num-row');
+        if (!suffix) return alert("Nhập số đuôi!");
 
-  } catch(error){
-    output.textContent = "Lỗi khi tải hoặc xử lý file.";
-  }
-}
+        rows.forEach(row => {
+            if (row.innerText.trim().endsWith(suffix)) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+        saveLocal();
+    }
+
+    function saveLocal() {
+        const area = document.getElementById('resultArea');
+        // Lưu toàn bộ nội dung HTML bao gồm cả các class "hidden"
+        localStorage.setItem(STORAGE_KEY, area.innerHTML);
+    }
+
+    function clearData() {
+        if(confirm("Xóa vĩnh viễn?")) {
+            localStorage.removeItem(STORAGE_KEY);
+            document.getElementById('resultArea').innerHTML = '';
+        }
+    }
 </script>
-
 </body>
 </html>
-
-
-
