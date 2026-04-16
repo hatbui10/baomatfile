@@ -2,159 +2,152 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>MATRIX V11 - ULTRA PERSISTENT</title>
+    <title>MATRIX V11 - ABSOLUTE & STORAGE</title>
     <style>
-        body {
-            background-color: #050505;
-            color: #00ff41;
-            font-family: 'Consolas', monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding-top: 20px;
-        }
-        .container {
-            width: 95%;
-            max-width: 500px;
-            background-color: #111;
-            padding: 20px;
-            border: 1px solid #00ff41;
-            border-radius: 8px;
-        }
+        body { background-color: #050505; color: #00ff41; font-family: 'Consolas', monospace; display: flex; flex-direction: column; align-items: center; margin: 0; padding-top: 20px; }
+        .container { width: 95%; max-width: 600px; background-color: #111; padding: 20px; border: 1px solid #00ff41; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 65, 0.2); }
         .input-group { margin-bottom: 12px; }
-        label { font-size: 11px; color: #888; display: block; margin-bottom: 4px; text-transform: uppercase; }
-        input {
-            width: 100%; padding: 12px; background: #000; border: 1px solid #333;
-            color: #ffd600; border-radius: 4px; box-sizing: border-box; font-size: 16px;
-        }
-        .row-flex { display: flex; gap: 8px; }
-        .row-flex input { flex: 3; }
-        .row-flex button { 
-            flex: 1; background-color: #ffd600; color: #000; 
-            border: none; border-radius: 4px; font-weight: bold; cursor: pointer;
-        }
+        label { font-size: 11px; color: #888; display: block; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        input[type="file"] { width: 100%; padding: 12px; background: #000; border: 1px dashed #444; color: #ffd600; border-radius: 4px; cursor: pointer; }
         .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .main-btn {
-            flex: 1; padding: 15px; cursor: pointer; font-weight: bold;
-            border: none; border-radius: 4px; text-transform: uppercase; color: white;
-        }
-        #btnA { background-color: #1b5e20; }
-        #btnB { background-color: #b71c1c; }
-        #resultArea {
-            margin-top: 25px; display: flex; flex-direction: column; gap: 8px; width: 100%;
-        }
-        .num-row {
-            padding: 15px; text-align: center; background-color: #1a1a1a;
-            border: 1px solid #222; border-radius: 4px; font-size: 26px;
-            letter-spacing: 4px; color: #ffd600;
-        }
-        .hidden { display: none !important; }
-        #btnClear { background: none; border: 1px solid #333; color: #444; width: 100%; margin-top: 30px; cursor: pointer; padding: 5px; font-size: 10px; }
+        .action-btn { flex: 1; padding: 15px; cursor: pointer; font-weight: bold; border: none; border-radius: 4px; text-transform: uppercase; color: white; transition: 0.2s; font-size: 16px; }
+        .btn-n { background-color: #1b5e20; border: 1px solid #00ff41; }
+        .btn-n:hover { background-color: #00ff41; color: #000; }
+        #btnDownload { background-color: #01579b; width: 100%; margin-top: 10px; }
+        #status { color: #ffd600; margin-top: 15px; font-size: 13px; text-align: center; font-weight: bold; }
+        #resultArea { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; width: 100%; max-height: 400px; overflow-y: auto; }
+        .num-row { padding: 8px; text-align: center; background-color: #1a1a1a; border: 1px solid #333; border-radius: 4px; font-size: 18px; color: #ffd600; font-weight: bold; }
+        #btnClear { background: none; border: 1px solid #444; color: #444; width: 100%; margin-top: 30px; cursor: pointer; padding: 8px; font-size: 10px; border-radius: 4px; text-transform: uppercase; }
+        #btnClear:hover { color: #ff5252; border-color: #ff5252; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #00ff41; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2 style="text-align:center; color:#00ff41; margin-top:0;">MATRIX V11</h2>
+    <h2 style="text-align:center; color:#00ff41; margin-top:0;">MATRIX V11 - ABSOLUTE</h2>
     
     <div class="input-group">
-        <label>Độ dài (n):</label>
-        <input type="number" id="lengthInput" value="5">
-    </div>
-
-    <div class="input-group">
-        <label>2 số cuối & Lọc:</label>
-        <div class="row-flex">
-            <input type="text" id="suffixInput" maxlength="2" placeholder="VD: 88">
-            <button onclick="applyFilter()">LỌC</button>
-        </div>
-    </div>
-
-    <div class="input-group">
-        <label>File dữ liệu:</label>
+        <label>Bước 1: Chọn File nguồn (.txt)</label>
         <input type="file" id="fileUpload" accept=".txt">
     </div>
 
+    <label>Bước 2: Chọn độ dài (Lọc sạch 100%)</label>
     <div class="btn-group">
-        <button id="btnA" class="main-btn" onclick="process(true)">Nút A (≥ 5)</button>
-        <button id="btnB" class="main-btn" onclick="process(false)">Nút B (< 5)</button>
+        <button class="action-btn btn-n" onclick="handleMode(2)">Chạy n=2</button>
+        <button class="action-btn btn-n" onclick="handleMode(3)">Chạy n=3</button>
+        <button class="action-btn btn-n" onclick="handleMode(4)">Chạy n=4</button>
     </div>
+
+    <div id="status">Sẵn sàng phân tích...</div>
+    <button id="btnDownload" class="action-btn" onclick="downloadResult()">TẢI KẾT QUẢ (.TXT)</button>
     
     <div id="resultArea"></div>
-    <button id="btnClear" onclick="clearData()">XÓA BỘ NHỚ LOCAL</button>
+    <button id="btnClear" onclick="clearData()">Xóa bộ nhớ lưu trữ</button>
 </div>
 
 <script>
-    const STORAGE_KEY = 'MATRIX_FINAL_SAVE_V11';
+    const STORAGE_KEY = 'MATRIX_ABSOLUTE_RESULTS';
+    const STATUS_KEY = 'MATRIX_ABSOLUTE_STATUS';
+    let currentResults = [];
 
-    // KHÔI PHỤC NGAY LẬP TỨC KHI LOAD TRANG
+    // Tự động khôi phục dữ liệu khi mở lại trang
     document.addEventListener('DOMContentLoaded', () => {
         const savedData = localStorage.getItem(STORAGE_KEY);
+        const savedStatus = localStorage.getItem(STATUS_KEY);
         if (savedData) {
             document.getElementById('resultArea').innerHTML = savedData;
-            console.log("Đã khôi phục dữ liệu từ Local Storage.");
+            document.getElementById('status').innerText = savedStatus || "Đã khôi phục dữ liệu cũ.";
+            updateCurrentResultsFromUI();
         }
     });
 
-    function process(isGreaterMode) {
-        const n = parseInt(document.getElementById('lengthInput').value) || 5;
-        const fileInput = document.getElementById('fileUpload');
-        const resultArea = document.getElementById('resultArea');
+    function hasFourInARow(str) {
+        if (str.length < 4) return false;
+        let countA = 0, countB = 0;
+        for (let i = 0; i < str.length; i++) {
+            const val = parseInt(str[i]);
+            if (val >= 5) { countA++; countB = 0; } 
+            else { countB++; countA = 0; }
+            if (countA >= 4 || countB >= 4) return true;
+        }
+        return false;
+    }
 
-        if (!fileInput.files[0]) return alert("Hãy chọn file!");
+    function handleMode(n) {
+        const fileInput = document.getElementById('fileUpload');
+        const status = document.getElementById('status');
+        if (!fileInput.files[0]) return alert("Vui lòng chọn file trước!");
 
         const reader = new FileReader();
         reader.onload = function(e) {
             const allDigits = e.target.result.replace(/\D/g, ''); 
-            let htmlContent = '';
-            let currentSeq = "";
+            const registry = {};
 
-            for (let i = 0; i < allDigits.length; i++) {
-                const d = parseInt(allDigits[i]);
-                let valid = isGreaterMode ? (d >= 5) : (d < 5);
+            for (let i = 0; i <= allDigits.length - n; i++) {
+                const currentChunk = allDigits.substring(i, i + n);
+                const nextSix = allDigits.substring(i + n, i + n + 6);
 
-                if (valid) {
-                    currentSeq += allDigits[i];
-                    if (currentSeq.length === n) {
-                        htmlContent += `<div class="num-row">${currentSeq}</div>`;
-                        currentSeq = "";
+                if (!(currentChunk in registry)) {
+                    registry[currentChunk] = { isAlwaysSafe: true };
+                }
+
+                if (nextSix.length >= 4) {
+                    if (hasFourInARow(nextSix)) {
+                        registry[currentChunk].isAlwaysSafe = false;
                     }
-                } else {
-                    currentSeq = ""; 
                 }
             }
-            resultArea.innerHTML = htmlContent;
-            saveLocal();
+            
+            currentResults = Object.keys(registry)
+                .filter(num => registry[num].isAlwaysSafe)
+                .sort();
+
+            const statusText = `Đã lọc xong n=${n}. Tìm thấy ${currentResults.length} số an toàn tuyệt đối.`;
+            status.innerText = statusText;
+            
+            renderResults(currentResults);
+            saveToLocal(statusText);
         };
         reader.readAsText(fileInput.files[0]);
     }
 
-    function applyFilter() {
-        const suffix = document.getElementById('suffixInput').value;
-        const rows = document.querySelectorAll('.num-row');
-        if (!suffix) return alert("Nhập số đuôi!");
-
-        rows.forEach(row => {
-            if (row.innerText.trim().endsWith(suffix)) {
-                row.classList.remove('hidden');
-            } else {
-                row.classList.add('hidden');
-            }
-        });
-        saveLocal();
+    function renderResults(arr) {
+        const resultArea = document.getElementById('resultArea');
+        resultArea.innerHTML = arr.map(num => `<div class="num-row">${num}</div>`).join('');
     }
 
-    function saveLocal() {
-        const area = document.getElementById('resultArea');
-        // Lưu toàn bộ nội dung HTML bao gồm cả các class "hidden"
-        localStorage.setItem(STORAGE_KEY, area.innerHTML);
+    function saveToLocal(statusText) {
+        localStorage.setItem(STORAGE_KEY, document.getElementById('resultArea').innerHTML);
+        localStorage.setItem(STATUS_KEY, statusText);
+    }
+
+    function updateCurrentResultsFromUI() {
+        const rows = document.querySelectorAll('.num-row');
+        currentResults = Array.from(rows).map(row => row.innerText);
+    }
+
+    function downloadResult() {
+        if (currentResults.length === 0) return alert("Không có dữ liệu!");
+        const content = currentResults.join('\n');
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `absolute_safe_n${currentResults[0].length}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 
     function clearData() {
-        if(confirm("Xóa vĩnh viễn?")) {
+        if(confirm("Xóa toàn bộ dữ liệu đã lưu?")) {
             localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(STATUS_KEY);
             document.getElementById('resultArea').innerHTML = '';
+            document.getElementById('status').innerText = "Dữ liệu đã được xóa.";
+            currentResults = [];
         }
     }
 </script>
