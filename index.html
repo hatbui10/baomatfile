@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bảo mật file</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bảo mật 5 lớp</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         :root {
@@ -11,6 +11,8 @@
             --neon-pink: #ff00ff;
             --bg-color: #050505;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg-color);
@@ -20,53 +22,63 @@
             padding: 30px 3px 20px 3px; /* Quy tắc 3 cạnh */
             display: flex;
             justify-content: center;
+            min-height: 100vh;
         }
 
         .container {
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 15px;
-            padding: 15px;
-            box-sizing: border-box;
+            border-radius: 20px;
+            padding: 20px;
         }
 
         h2 {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: var(--neon-blue);
-            text-shadow: 0 0 8px var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
             margin-bottom: 20px;
         }
 
-        .section {
-            margin-bottom: 15px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+        .box {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        label { display: block; margin-bottom: 5px; font-size: 0.85em; color: #aaa; }
+        label { display: block; font-size: 0.7rem; color: #666; margin-bottom: 6px; text-transform: uppercase; }
 
         input, select, textarea {
             width: 100%;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 6px;
+            background: #000;
+            border: 1px solid #222;
+            border-radius: 8px;
             padding: 12px;
-            color: white;
-            box-sizing: border-box;
-            font-size: 16px; /* Chống zoom trên iPhone */
+            color: #fff;
+            font-size: 16px;
         }
 
-        input:focus, select:focus {
-            border-color: var(--neon-blue);
-            outline: none;
+        /* Tầng bảo mật 5: Màu Hex */
+        .color-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        input[type="color"] {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border: 2px solid #222;
+            cursor: pointer;
+            background: none;
         }
 
-        /* 10 hình vẽ dạng lưới */
         .shape-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -79,186 +91,144 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid #333;
+            background: #0a0a0a;
+            border: 1px solid #222;
             border-radius: 8px;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        .shape-item svg { width: 24px; height: 24px; stroke: #666; stroke-width: 2; fill: none; }
+        .shape-item svg { width: 22px; height: 22px; stroke: #444; stroke-width: 2; fill: none; }
+        .shape-item.active { border-color: var(--neon-pink); background: rgba(255, 0, 255, 0.05); }
+        .shape-item.active svg { stroke: var(--neon-pink); }
 
-        .shape-item.selected {
-            border-color: var(--neon-pink);
-            background: rgba(255, 0, 255, 0.1);
-        }
-
-        .shape-item.selected svg { stroke: var(--neon-pink); }
-
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        button { padding: 16px; border: none; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
         .btn-enc { background: var(--neon-blue); color: #000; }
         .btn-dec { background: transparent; border: 1px solid var(--neon-pink); color: var(--neon-pink); }
 
-        textarea { margin-top: 15px; height: 100px; font-size: 14px; }
-
-        /* Tối ưu riêng cho mobile */
-        @media (max-width: 400px) {
-            .shape-grid { grid-template-columns: repeat(4, 1fr); }
-            h2 { font-size: 1.2rem; }
-        }
+        textarea { margin-top: 15px; height: 100px; color: #00f3ff; font-size: 13px; font-family: monospace; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>CRYPTO SCANNER PRO</h2>
+    <h2>KSS 5-LAYER SHIELD</h2>
 
-    <div class="section">
-        <label>1. Chọn File</label>
-        <input type="file" id="fileInput">
+    <div class="box">
+        <label>01. File nguồn</label>
+        <input type="file" id="f">
     </div>
 
-    <div class="section">
-        <label>2. Câu hỏi bảo mật (1 trong 10)</label>
-        <select id="question">
-            <option value="1">Biển số xe đầu tiên?</option>
-            <option value="2">Tên người bạn ghét nhất?</option>
-            <option value="3">Món ăn ám ảnh nhất?</option>
-            <option value="4">Số nhà cũ của bạn?</option>
-            <option value="5">Thần tượng thời thơ ấu?</option>
-            <option value="6">Mật khẩu máy tính đầu tiên?</option>
-            <option value="7">Ngày kỷ niệm bí mật?</option>
-            <option value="8">Tên con vật bạn sợ nhất?</option>
-            <option value="9">Màu sắc may mắn cá nhân?</option>
-            <option value="10">Biệt danh bí mật của bạn?</option>
+    <div class="box">
+        <label>02. Câu hỏi gợi ý & Trả lời</label>
+        <select id="q" style="margin-bottom: 8px;">
+            <option>Chọn câu hỏi gợi ý mật mã...</option>
+            <option>Mã hex này đại diện cho điều gì?</option>
+            <option>Màu sắc của kỷ niệm?</option>
         </select>
-        <input type="text" id="answer" placeholder="Câu trả lời..." style="margin-top:8px">
+        <input type="text" id="a" placeholder="Câu trả lời...">
     </div>
 
-    <div class="section">
+    <div class="box">
         <div style="display:flex; gap:10px">
             <div style="flex:2">
-                <label>3. 12 Chữ số</label>
-                <input type="number" id="digits" placeholder="12 số..." oninput="if(value.length>12)value=value.slice(0,12)">
+                <label>03. 12 Số</label>
+                <input type="number" id="n" placeholder="000000000000" oninput="if(value.length>12)value=value.slice(0,12)">
             </div>
             <div style="flex:1">
-                <label>4. 3 Ký tự</label>
-                <input type="text" id="specials" maxlength="3" placeholder="@#!">
+                <label>04. 3 Ký tự </label>
+                <input type="text" id="s" maxlength="3" placeholder="!@#">
             </div>
         </div>
     </div>
 
-    <div class="section">
-        <label>5. Chọn 1 trong 10 hình vẽ</label>
-        <div class="shape-grid" id="shapeGrid">
-            </div>
+    <div class="box">
+        <label>05. Chọn 1 hình vẽ </label>
+        <div class="shape-grid" id="g"></div>
+    </div>
+
+    <div class="box">
+        <label>06. Chọn mã màu</label>
+        <div class="color-wrapper">
+            <input type="color" id="c" value="#00f3ff">
+            <span id="hexVal" style="font-family: monospace; color: var(--neon-blue);">#00f3ff</span>
+        </div>
     </div>
 
     <div class="btn-group">
-        <button class="btn-enc" onclick="handleProcess('encrypt')">Mã hoá & Tải file</button>
-        <button class="btn-dec" onclick="handleProcess('decrypt')">Khôi phục dữ liệu</button>
+        <button class="btn-enc" onclick="run('enc')">Mã hoá & Tải (KSS V2)</button>
+        <button class="btn-dec" onclick="run('dec')">Khôi phục file gốc</button>
     </div>
 
-    <textarea id="output" placeholder="Nội dung file sau giải mã..." readonly></textarea>
+    <textarea id="o" readonly placeholder="Kết quả giải mã..."></textarea>
 </div>
 
 <script>
-    let currentShape = '';
-    const shapes = [
-        '<circle cx="12" cy="12" r="9"/>',
-        '<rect x="4" y="4" width="16" height="16"/>',
-        '<polygon points="12,2 22,20 2,20"/>',
-        '<ellipse cx="12" cy="12" rx="9" ry="5"/>',
-        '<path d="M12 2 L15 9 L22 9 L17 14 L19 21 L12 17 L5 21 L7 14 L2 9 L9 9 Z"/>', // Star
-        '<rect x="6" y="6" width="12" height="12" rx="2"/>',
-        '<circle cx="12" cy="12" r="4"/>',
-        '<path d="M3 12 h18 M12 3 v18"/>', // Cross
-        '<path d="M5 5 L19 19 M19 5 L5 19"/>', // X
-        '<path d="M12 21 a9 9 0 1 0 0 -18 v18"/>' // Semi-circle
+    let sel = null;
+    const icons = [
+        '<circle cx="12" cy="12" r="9"/>','<rect x="4" y="4" width="16" height="16"/>',
+        '<path d="M12 2 L22 20 L2 20 Z"/>','<path d="M12 2 L15 9 L22 9 L17 14 L19 21 L12 17 L5 21 L7 14 L2 9 L9 9 Z"/>',
+        '<ellipse cx="12" cy="12" rx="9" ry="5"/>','<path d="M3 12 h18 M12 3 v18"/>',
+        '<path d="M5 5 L19 19 M19 5 L5 19"/>','<circle cx="12" cy="12" r="4"/>',
+        '<path d="M12 21 a9 9 0 1 0 0 -18 v18"/>','<rect x="8" y="2" width="8" height="20" rx="2"/>'
     ];
 
-    // Khởi tạo 10 hình vẽ
-    const grid = document.getElementById('shapeGrid');
-    shapes.forEach((s, i) => {
-        const div = document.createElement('div');
-        div.className = 'shape-item';
-        div.innerHTML = `<svg viewBox="0 0 24 24">${s}</svg>`;
-        div.onclick = () => {
-            currentShape = i;
-            document.querySelectorAll('.shape-item').forEach(el => el.classList.remove('selected'));
-            div.classList.add('selected');
-        };
-        grid.appendChild(div);
+    const grid = document.getElementById('g');
+    icons.forEach((svg, i) => {
+        const d = document.createElement('div');
+        d.className = 'shape-item';
+        d.innerHTML = `<svg viewBox="0 0 24 24">${svg}</svg>`;
+        d.onclick = () => { sel = i; document.querySelectorAll('.shape-item').forEach(e => e.classList.remove('active')); d.classList.add('active'); };
+        grid.appendChild(d);
     });
 
-    function resetForm() {
-        document.getElementById('fileInput').value = '';
-        document.getElementById('answer').value = '';
-        document.getElementById('digits').value = '';
-        document.getElementById('specials').value = '';
-        document.getElementById('question').selectedIndex = 0;
-        currentShape = '';
-        document.querySelectorAll('.shape-item').forEach(el => el.classList.remove('selected'));
-    }
+    document.getElementById('c').oninput = function() {
+        document.getElementById('hexVal').innerText = this.value;
+        document.getElementById('hexVal').style.color = this.value;
+    };
 
-    async function handleProcess(mode) {
-        const file = document.getElementById('fileInput').files[0];
-        const ans = document.getElementById('answer').value;
-        const dig = document.getElementById('digits').value;
-        const spec = document.getElementById('specials').value;
+    async function run(m) {
+        const file = document.getElementById('f').files[0];
+        const ans = document.getElementById('a').value;
+        const num = document.getElementById('n').value;
+        const spec = document.getElementById('s').value;
+        const hex = document.getElementById('c').value;
 
-        if (!file || !ans || dig.length < 1 || currentShape === '') {
-            alert("Thiếu thông tin! Cần File + Trả lời + Số + Chọn hình.");
-            return;
+        if (!file || !ans || num.length < 12 || sel === null) {
+            alert("Vui lòng hoàn thành 5 tầng bảo mật!"); return;
         }
 
-        const key = ans + dig + spec + currentShape;
-        const reader = new FileReader();
+        // TẠO KHÓA TỪ 5 TẦNG: Trả lời + 12 Số + 3 Ký tự + Hình + Mã màu Hex
+        const raw = ans + num + spec + sel + hex;
+        const salt = CryptoJS.SHA512(hex + num).toString(); // Muối kết hợp Màu và Số
 
-        reader.onload = function(e) {
-            const data = e.target.result;
+        const r = new FileReader();
+        r.onload = function(e) {
             try {
-                if (mode === 'encrypt') {
-                    const encrypted = CryptoJS.AES.encrypt(data, key).toString();
-                    const blob = new Blob([encrypted], {type: 'text/plain'});
-                    const a = document.createElement('a');
-                    const rand = Math.floor(1000 + Math.random() * 9000);
-                    a.href = URL.createObjectURL(blob);
-                    a.download = `SECURE_${rand}.txt`;
-                    a.click();
-                    
-                    // Reset ngay sau khi mã hóa
-                    resetForm();
-                    alert("Đã mã hóa và tải file! Form đã được dọn dẹp.");
-                } else {
-                    const decrypted = CryptoJS.AES.decrypt(data, key);
-                    const original = decrypted.toString(CryptoJS.enc.Utf8);
-                    if (!original) throw new Error();
-                    document.getElementById('output').value = original;
-                }
-            } catch (err) {
-                alert("Lỗi: Sai thông tin bảo mật hoặc file không đúng định dạng!");
-            }
-        };
+                // Tiêu chuẩn KSS V2: PBKDF2 + 100,000 vòng + SHA512
+                const k = CryptoJS.PBKDF2(raw, salt, { keySize: 512/32, iterations: 100000, hasher: CryptoJS.algo.SHA512 }).toString();
+                const content = e.target.result;
 
-        reader.readAsText(file);
+                if (m === 'enc') {
+                    const encrypted = CryptoJS.AES.encrypt(content, k).toString();
+                    const blob = new Blob(["KSS_V2_5L|" + encrypted], {type: 'text/plain'});
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = `V2_SECURE_${Math.floor(Math.random()*9999)}.txt`;
+                    a.click();
+                    location.reload(); // Tự hủy dữ liệu form
+                } else {
+                    let data = content;
+                    if(content.startsWith("KSS_V2_5L|")) data = content.split("|")[1];
+                    const dec = CryptoJS.AES.decrypt(data, k);
+                    const orig = dec.toString(CryptoJS.enc.Utf8);
+                    if (!orig) throw new Error();
+                    document.getElementById('o').value = orig;
+                }
+            } catch (err) { alert("Sai thông tin bảo mật! Truy cập bị từ chối."); }
+        };
+        r.readAsText(file);
     }
 </script>
-
 </body>
 </html>
